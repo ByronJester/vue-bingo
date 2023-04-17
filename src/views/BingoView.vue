@@ -1,6 +1,6 @@
 <template>
     <div class="w-full">
-        <div class="flex flex-row mt-2">
+        <div class="flex flex-row mt-2" v-if="!winner">
             <button @click="roll()" class="bg-blue-500 w-1/5 ml-2 py-4 text-white text-2xl rounded-md" >
                 Roll
             </button>
@@ -16,6 +16,12 @@
             >
                 {{ rolled_number }}
             </button>
+        </div>
+
+        <div class="mt-5 text-5xl mb-10" v-if="winner">
+            <p>
+                Congrats you win.
+            </p>
         </div>
 
         <div class="mt-5" v-if="message">
@@ -423,11 +429,87 @@ export default {
             cards : null,
             rolled_letter: null,
             rolled_number: null,
-            message: null
+            message: null,
+            winner: false
         }
     },
     mounted(){
         this.getCards()
+    },
+    watch: {
+        cards: {
+            handler(val) {
+                
+                var card_1 = val[0]
+
+                if(
+                    card_1.b.filter( x => { return x.is_crossout == true }).length > 0 &&
+                    card_1.i.filter( x => { return x.is_crossout == true }).length > 0 &&
+                    card_1.n.filter( x => { return x.is_crossout == true }).length > 0 &&
+                    card_1.g.filter( x => { return x.is_crossout == true }).length > 0 &&
+                    card_1.o.filter( x => { return x.is_crossout == true }).length > 0 
+                ) {
+                    this.winner = true
+                    this.finishTheGame()
+                }
+
+                var card_2 = val[1]
+
+                if(
+                    card_2.b.filter( x => { return x.is_crossout == true }).length > 0 &&
+                    card_2.i.filter( x => { return x.is_crossout == true }).length > 0 &&
+                    card_2.n.filter( x => { return x.is_crossout == true }).length > 0 &&
+                    card_2.g.filter( x => { return x.is_crossout == true }).length > 0 &&
+                    card_2.o.filter( x => { return x.is_crossout == true }).length > 0 
+                ) {
+                    this.winner = true
+                    this.finishTheGame()
+                }
+
+                var card_3 = val[2]
+
+                if(
+                    card_3.b.filter( x => { return x.is_crossout == true }).length > 0 &&
+                    card_3.i.filter( x => { return x.is_crossout == true }).length > 0 &&
+                    card_3.n.filter( x => { return x.is_crossout == true }).length > 0 &&
+                    card_3.g.filter( x => { return x.is_crossout == true }).length > 0 &&
+                    card_3.o.filter( x => { return x.is_crossout == true }).length > 0 
+                ) {
+                    this.winner = true
+                    this.finishTheGame()
+                }
+
+                var card_4 = val[3]
+
+                if(
+                    card_4.b.filter( x => { return x.is_crossout == true }).length > 0 &&
+                    card_4.i.filter( x => { return x.is_crossout == true }).length > 0 &&
+                    card_4.n.filter( x => { return x.is_crossout == true }).length > 0 &&
+                    card_4.g.filter( x => { return x.is_crossout == true }).length > 0 &&
+                    card_4.o.filter( x => { return x.is_crossout == true }).length > 0 
+                ) {
+                    this.winner = true
+                    this.finishTheGame()
+                }
+
+                var card_5 = val[4]
+
+                if(
+                    card_5.b.filter( x => { return x.is_crossout == true }).length > 0 &&
+                    card_5.i.filter( x => { return x.is_crossout == true }).length > 0 &&
+                    card_5.n.filter( x => { return x.is_crossout == true }).length > 0 &&
+                    card_5.g.filter( x => { return x.is_crossout == true }).length > 0 &&
+                    card_5.o.filter( x => { return x.is_crossout == true }).length > 0 
+                ) {
+                    this.winner = true
+                    this.finishTheGame()
+                }
+
+                
+            },
+
+            deep: true
+        },
     },
     methods: {
         getCards() {
@@ -477,6 +559,20 @@ export default {
                     }, 3000)
                 });
 
+        },
+
+        finishTheGame() {
+            var self = this
+
+            axios.post('http://localhost:8000/api/bingo/finish-game', {})
+                .then(function (response) {
+                    setTimeout(function() {
+                        location.reload()
+                    }, 5000)
+                })
+                .catch(function (error) {
+                    
+                });
         }
     }
 }
